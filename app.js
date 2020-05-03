@@ -1,15 +1,17 @@
-var scores, roundScore, activePlayer, gamePlaying; //declare variables
-
+var scores, roundScore, activePlayer, gamePlaying, prevRoll, scoreAtBeginning; //declare variables
 var scores = [0, 0]; //array of score
 intialize(); //initialize the game
 
+/**
+ * ROLL BUTTON
+ */
 //callback fucntion, a function we pass that will be called by another function
 //in this case event listener is calling the btn function somewhere
 document.querySelector(".btn-roll").addEventListener("click", function () {
   if (gamePlaying) {
+    //game state is playing
     //randomize number
     var dice = Math.floor(Math.random() * 6) + 1;
-
     //display result
     document.querySelector(".dice").style.display = "block";
     var diceDOM = document.querySelector(".dice");
@@ -18,11 +20,22 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
     //update round score if the rolled number was NOT a 1
 
     if (dice !== 1) {
-      //Add score
-      roundScore += dice;
-      document.getElementById(
-        "current-" + activePlayer
-      ).textContent = roundScore;
+      //check the previous roll and current roll to see if the dice is the same value
+      //if they are different, then set the score and the round score to 0
+      //alternate to the next players turn
+      if (prevRoll != 0 && prevRoll === 6 && dice === 6) {
+        scores[activePlayer] = 0;
+        prevRoll = 0;
+        roundScore = 0;
+        nextPlayer();
+      } else {
+        prevRoll = dice;
+        //Add score
+        roundScore += dice;
+        document.getElementById(
+          "current-" + activePlayer
+        ).textContent = roundScore;
+      }
     } else {
       //Next Player
       roundScore = 0; //reset round score to 0
@@ -40,6 +53,9 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
   }
 });
 
+/**
+ * HOLD BUTTON
+ */
 document.querySelector(".btn-hold").addEventListener("click", function () {
   if (gamePlaying) {
     //add roundScore score to scores for active player
@@ -62,6 +78,7 @@ document.querySelector(".btn-hold").addEventListener("click", function () {
       document.querySelector(".dice").style.display = "none";
       gamePlaying = false;
     } else {
+      prevRoll = 0;
       nextPlayer();
     }
   }
@@ -91,6 +108,7 @@ function intialize() {
   //hide dice
   document.querySelector(".dice").style.display = "none";
   gamePlaying = true; //turn on game
+  prevRoll = 0;
 }
 
 function nextPlayer() {
