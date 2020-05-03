@@ -1,6 +1,32 @@
+/**
+ * INPUT TEXT FIELD
+ */
+//disable score
+input = document.getElementById("inputTotalScore");
+input.addEventListener("mousewheel", function (event) {
+  this.blur();
+});
+//disable null charcters and include characters that are from 0-9
+input.addEventListener("keypress", function (evt) {
+  if ((evt.which != 0 && evt.which < 48) || evt.which > 57) {
+    evt.preventDefault();
+  }
+});
+
+var goalScore;
+/*****
+ * START BUTTON
+ */
+document.querySelector(".start-game").addEventListener("click", function () {
+  goalScore = input.value;
+  input.value = 100;
+  document.querySelector(".main-menu").style.display = "none";
+  document.querySelector(".gameplay").style.display = "block";
+  intialize(); //initialize the game
+});
+
 var scores, roundScore, activePlayer, gamePlaying, prevRoll, scoreAtBeginning; //declare variables
 var scores = [0, 0]; //array of score
-intialize(); //initialize the game
 
 /**
  * ROLL BUTTON
@@ -25,8 +51,8 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
       //alternate to the next players turn
       if (prevRoll != 0 && prevRoll === 6 && dice === 6) {
         scores[activePlayer] = 0;
-        prevRoll = 0;
-        roundScore = 0;
+        document.getElementById("score-" + activePlayer).textContent =
+        scores[activePlayer];  
         nextPlayer();
       } else {
         prevRoll = dice;
@@ -38,17 +64,7 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
       }
     } else {
       //Next Player
-      roundScore = 0; //reset round score to 0
-      document
-        .querySelector(".player-" + activePlayer + "-panel")
-        .classList.remove("active");
       nextPlayer();
-      document.getElementById("current-0").textContent = "0";
-      document.getElementById("current-1").textContent = "0";
-      document
-        .querySelector(".player-" + activePlayer + "-panel")
-        .classList.add("active");
-      document.querySelector(".dice").style.display = "none";
     }
   }
 });
@@ -66,7 +82,7 @@ document.querySelector(".btn-hold").addEventListener("click", function () {
     document.getElementById("current-" + activePlayer).textContent = "0"; //reset
     roundScore = 0;
     //Check if player won the game
-    if (scores[activePlayer] >= 100) {
+    if (scores[activePlayer] >= goalScore) {
       document.getElementById("name-" + activePlayer).textContent = "Winner!";
       document.querySelector(".dice").style.display = "none";
       document
@@ -84,7 +100,11 @@ document.querySelector(".btn-hold").addEventListener("click", function () {
   }
 });
 
-document.querySelector(".btn-new").addEventListener("click", intialize);
+document.querySelector(".btn-new").addEventListener("click", function () {
+  intialize();
+  document.querySelector(".gameplay").style.display = "none";
+  document.querySelector(".main-menu").style.display = "block";
+});
 
 function intialize() {
   //reset scores
@@ -112,5 +132,15 @@ function intialize() {
 }
 
 function nextPlayer() {
+  prevRoll = 0;
+  roundScore = 0;
+  document
+    .querySelector(".player-" + activePlayer + "-panel")
+    .classList.remove("active");
   activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+  document
+    .querySelector(".player-" + activePlayer + "-panel")
+    .classList.add("active");
+  document.getElementById("current-0").textContent = roundScore;
+  document.getElementById("current-1").textContent = roundScore;
 }

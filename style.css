@@ -1,7 +1,9 @@
 /**********************************************
 *** GENERAL
 **********************************************/
-
+.gameplay{
+    display: none;
+}
 * {
     margin: 0;
     padding: 0;
@@ -45,12 +47,65 @@ body {
     padding: 100px;
 }
 
+.main-menu {
+    width: 50%;
+    float: none;
+    height: 600px;
+    padding: 100px;
+}
+
 
 
 /**********************************************
 *** PLAYERS
 **********************************************/
 
+.main-menu-box{
+    background-color: #EB4D4D;
+    color: #fff;
+    left: 50%;
+    padding: 40px;
+    padding-bottom: 50px;
+    transform: translateX(-50%);
+    top: 178px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+
+.main-menu-label{
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+#inputTotalScore{
+    left: 50%;
+    transform: translateX(-50%);
+    top: 260px;
+    padding: 10px 0px 0px;
+    background-color: #EB4D4D;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom-color: #f7f7f7;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: x-large;
+}
+
+*:focus {
+    outline: none;
+}
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none; 
+    margin: 0; 
+}
 .player-name {
     font-size: 40px;
     text-align: center;
@@ -140,7 +195,7 @@ i {
 .btn-new { top: 45px;}
 .btn-roll { top: 403px;}
 .btn-hold { top: 467px;}
-
+.start-game{ top: 350px;}
 .dice {
     position: absolute;
     left: 50%;
