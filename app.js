@@ -1,16 +1,6 @@
 var scores, roundScore, activePlayer; //declare variables
-
-scores = [0, 0]; //scores initially set to 0
-roundScore = 0; //round score is initially set to 0
-activePlayer = 1; //0 for player 1, 1 for player 2
-//document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>'; Don't want italics 
-//document.querySelector('#current-'  + activePlayer).textContent = dice;
-document.getElementById('score-0').textContent = scores[0];
-document.getElementById('score-1').textContent = scores[1];
-document.getElementById('current-0').textContent = roundScore;
-document.getElementById('current-0').textContent = roundScore;
-
-document.querySelector('.dice').style.display = 'none';
+var scores = [0,0];
+intialize();
 
 //callback fucntion, a function we pass that will be called by another function
 //in this case event listener is calling the btn function somewhere
@@ -49,7 +39,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
     document.getElementById('current-' + activePlayer).textContent = '0'; //reset 
     roundScore = 0;
     //Check if player won the game
-    if(scores[activePlayer] >= 20){
+    if(scores[activePlayer] >= 100){
         document.getElementById('name-' + activePlayer).textContent = 'Winner!';
         document.querySelector('.dice').style.display = 'none';
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
@@ -60,6 +50,33 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         nextPlayer();
     }
 })
+
+document.querySelector('.btn-new').addEventListener('click', intialize);
+
+function intialize(){
+
+    //reset scores
+    roundScore = 0;
+    scores[0] = 0;
+    scores[1] = 0;
+    activePlayer = 0;
+
+    //reset texts
+    document.getElementById('score-0').textContent = scores[0];
+    document.getElementById('score-1').textContent = scores[1];
+    document.getElementById('current-0').textContent = roundScore;
+    document.getElementById('current-0').textContent = roundScore;
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.add('active');
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+
+    //hide dice
+    document.querySelector('.dice').style.display = 'none';
+}
 
 function nextPlayer(){
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
