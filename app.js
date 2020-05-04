@@ -14,6 +14,7 @@ input.addEventListener("keypress", function (evt) {
 });
 
 var goalScore;
+let animation;
 /*****
  * START BUTTON
  */
@@ -25,7 +26,13 @@ document.querySelector(".start-game").addEventListener("click", function () {
   intialize(); //initialize the game
 });
 
-var scores, roundScore, activePlayer, gamePlaying, prevRoll, scoreAtBeginning; //declare variables
+var scores,
+  counter,
+  roundScore,
+  activePlayer,
+  gamePlaying,
+  prevRoll,
+  scoreAtBeginning; //declare variables
 var scores = [0, 0]; //array of score
 
 /**
@@ -39,33 +46,9 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
     //randomize number
     var dice = Math.floor(Math.random() * 6) + 1;
     //display result
-    document.querySelector(".dice").style.display = "block";
-    var diceDOM = document.querySelector(".dice");
-    diceDOM.style.display = "block";
-    diceDOM.src = "img/dice-" + dice + ".png";
-    //update round score if the rolled number was NOT a 1
-
-    if (dice !== 1) {
-      //check the previous roll and current roll to see if the dice is the same value
-      //if they are different, then set the score and the round score to 0
-      //alternate to the next players turn
-      if (prevRoll != 0 && prevRoll === 6 && dice === 6) {
-        scores[activePlayer] = 0;
-        document.getElementById("score-" + activePlayer).textContent =
-        scores[activePlayer];  
-        nextPlayer();
-      } else {
-        prevRoll = dice;
-        //Add score
-        roundScore += dice;
-        document.getElementById(
-          "current-" + activePlayer
-        ).textContent = roundScore;
-      }
-    } else {
-      //Next Player
-      nextPlayer();
-    }
+    animation = setInterval(diceAnimation, 200); //will loop every 200ms
+    const animationPromise = waitAnimation();
+    displayDice(dice, animationPromise);
   }
 });
 
@@ -143,4 +126,51 @@ function nextPlayer() {
     .classList.add("active");
   document.getElementById("current-0").textContent = roundScore;
   document.getElementById("current-1").textContent = roundScore;
+}
+
+function diceAnimation() {
+  //Code goes here
+  var diceDOM = document.querySelector(".dice");
+  diceDOM.style.display = "block";
+  diceDOM.src = "img/dice-" + (Math.floor(Math.random() * 6) + 1) + ".png";
+}
+
+async function waitAnimation() {
+  let p = new Promise((resolve, reject) => {
+    setTimeout(function () {
+      clearInterval(animation);
+      resolve();
+    }, 2000);
+  })
+  return p;
+}
+
+async function displayDice(dice, animationPromise) {
+  await animationPromise;
+  var diceDOM = document.querySelector(".dice");
+  document.querySelector(".dice").style.display = "block";
+  diceDOM.style.display = "block";
+  diceDOM.src = "img/dice-" + dice + ".png";
+  //update round score if the rolled number was NOT a 1
+  if (dice !== 1) {
+    //check the previous roll and current roll to see if the dice is the same value
+    //if they are different, then set the score and the round score to 0
+    //alternate to the next players turn
+    if (prevRoll != 0 && prevRoll === 6 && dice === 6) {
+      scores[activePlayer] = 0;
+      document.getElementById("score-" + activePlayer).textContent =
+        scores[activePlayer];
+      nextPlayer();
+    } else {
+      prevRoll = dice;
+      //Add score
+      roundScore += dice;
+      document.getElementById(
+        "current-" + activePlayer
+      ).textContent = roundScore;
+    }
+  } else {
+    //Next Player
+    nextPlayer();
+  }
 }

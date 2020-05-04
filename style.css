@@ -83,6 +83,7 @@ body {
 }
 
 #inputTotalScore{
+    caret-color: #f7f7f7;
     left: 50%;
     transform: translateX(-50%);
     top: 260px;
