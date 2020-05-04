@@ -48,6 +48,10 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
     var dice = [(Math.floor(Math.random() * 6) + 1), (Math.floor(Math.random() * 6) + 1)];
     //display result
     resetPrevDiceValue();
+    document.querySelector(".btn-hold").disabled = true;
+    document.querySelector(".btn-roll").disabled = true;
+    document.querySelector(".btn-new").disabled = true;
+
     animation = setInterval(diceAnimation, 200); //will loop every 200ms
     const animationPromise = waitAnimation();
     displayDice(dice, animationPromise);
@@ -129,8 +133,9 @@ function nextPlayer() {
 }
 
 function resetPrevDiceValue(){
-  var prevDiceValue = [0,0];
+  prevDiceValue = [0,0];
 }
+
 function diceAnimation() {
   //Code goes here
   var diceDOM = [document.getElementById("dice1"), document.getElementById("dice2")];
@@ -160,7 +165,7 @@ async function waitAnimation() {
 
 async function displayDice(dice, animationPromise) {
   await animationPromise;
-  var diceDOM = [document.getElementById("dice1"),document.getElementById("dice2")];
+  var diceDOM = [document.getElementById("dice1"), document.getElementById("dice2")];
   var i = 0;
   diceDOM.forEach(die => {
     die.style.display = "block";
@@ -190,4 +195,8 @@ async function displayDice(dice, animationPromise) {
     //Next Player
     nextPlayer();
   }
+  document.querySelector(".btn-hold").disabled = false;
+  document.querySelector(".btn-roll").disabled = false;
+  document.querySelector(".btn-new").disabled = false;
+
 }

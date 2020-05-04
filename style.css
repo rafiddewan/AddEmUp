@@ -196,6 +196,11 @@ i {
 .btn-new { top: 45px;}
 .btn-roll { top: 403px;}
 .btn-hold { top: 467px;}
+
+button[disabled] i{
+    color: rgba(0, 0, 0, 0.397);
+}
+ 
 .start-game{ top: 350px;}
 .dice {
     position: absolute;
