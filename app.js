@@ -15,6 +15,7 @@ input.addEventListener("keypress", function (evt) {
 
 var goalScore;
 let animation;
+
 /*****
  * START BUTTON
  */
@@ -33,6 +34,7 @@ var scores,
   gamePlaying,
   scoreAtBeginning; //declare variables
 var scores = [0, 0]; //array of score
+var prevDiceValue = [0,0];
 
 /**
  * ROLL BUTTON
@@ -45,6 +47,7 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
     //randomize number
     var dice = [(Math.floor(Math.random() * 6) + 1), (Math.floor(Math.random() * 6) + 1)];
     //display result
+    resetPrevDiceValue();
     animation = setInterval(diceAnimation, 200); //will loop every 200ms
     const animationPromise = waitAnimation();
     displayDice(dice, animationPromise);
@@ -125,12 +128,23 @@ function nextPlayer() {
   document.getElementById("current-1").textContent = roundScore;
 }
 
+function resetPrevDiceValue(){
+  var prevDiceValue = [0,0];
+}
 function diceAnimation() {
   //Code goes here
   var diceDOM = [document.getElementById("dice1"), document.getElementById("dice2")];
+  var i = 0;
   diceDOM.forEach(die => {
+    var dieAnimationVal;
     die.style.display = "block";
-    die.src = "img/dice-" + (Math.floor(Math.random() * 6) + 1) + ".png";  
+    do{
+      dieAnimationVal = Math.floor(Math.random() * 6) + 1;
+    }
+    while(prevDiceValue[i] === dieAnimationVal); //to make animations not "stall" with previous dice animations or the actual die value
+    prevDiceValue[i] = dieAnimationVal;
+    die.src = "img/dice-" + dieAnimationVal + ".png";  
+    i++;
   });
 }
 
@@ -140,7 +154,7 @@ async function waitAnimation() {
       clearInterval(animation);
       resolve();
     }, 2000);
-  })
+  });
   return p;
 }
 
