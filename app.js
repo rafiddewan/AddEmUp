@@ -31,7 +31,6 @@ var scores,
   roundScore,
   activePlayer,
   gamePlaying,
-  prevRoll,
   scoreAtBeginning; //declare variables
 var scores = [0, 0]; //array of score
 
@@ -44,7 +43,7 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
   if (gamePlaying) {
     //game state is playing
     //randomize number
-    var dice = Math.floor(Math.random() * 6) + 1;
+    var dice = [(Math.floor(Math.random() * 6) + 1), (Math.floor(Math.random() * 6) + 1)];
     //display result
     animation = setInterval(diceAnimation, 200); //will loop every 200ms
     const animationPromise = waitAnimation();
@@ -77,7 +76,6 @@ document.querySelector(".btn-hold").addEventListener("click", function () {
       document.querySelector(".dice").style.display = "none";
       gamePlaying = false;
     } else {
-      prevRoll = 0;
       nextPlayer();
     }
   }
@@ -109,13 +107,12 @@ function intialize() {
   document.getElementById("name-0").textContent = "Player 1";
   document.getElementById("name-1").textContent = "Player 2";
   //hide dice
-  document.querySelector(".dice").style.display = "none";
+  document.getElementById("dice1").style.display = "none";
+  document.getElementById("dice2").style.display = "none";
   gamePlaying = true; //turn on game
-  prevRoll = 0;
 }
 
 function nextPlayer() {
-  prevRoll = 0;
   roundScore = 0;
   document
     .querySelector(".player-" + activePlayer + "-panel")
@@ -130,9 +127,11 @@ function nextPlayer() {
 
 function diceAnimation() {
   //Code goes here
-  var diceDOM = document.querySelector(".dice");
-  diceDOM.style.display = "block";
-  diceDOM.src = "img/dice-" + (Math.floor(Math.random() * 6) + 1) + ".png";
+  var diceDOM = [document.getElementById("dice1"), document.getElementById("dice2")];
+  diceDOM.forEach(die => {
+    die.style.display = "block";
+    die.src = "img/dice-" + (Math.floor(Math.random() * 6) + 1) + ".png";  
+  });
 }
 
 async function waitAnimation() {
@@ -147,24 +146,28 @@ async function waitAnimation() {
 
 async function displayDice(dice, animationPromise) {
   await animationPromise;
-  var diceDOM = document.querySelector(".dice");
-  document.querySelector(".dice").style.display = "block";
-  diceDOM.style.display = "block";
-  diceDOM.src = "img/dice-" + dice + ".png";
+  var diceDOM = [document.getElementById("dice1"),document.getElementById("dice2")];
+  var i = 0;
+  diceDOM.forEach(die => {
+    die.style.display = "block";
+    die.src = "img/dice-" + dice[i] + ".png";  
+    i++;
+  });
   //update round score if the rolled number was NOT a 1
-  if (dice !== 1) {
-    //check the previous roll and current roll to see if the dice is the same value
+  if (dice[0] !== 1 && dice[1] !== 1) {
+    //check to see if the two dice have the same value
     //if they are different, then set the score and the round score to 0
     //alternate to the next players turn
-    if (prevRoll != 0 && prevRoll === 6 && dice === 6) {
+    if (dice[0] === 6 && dice[1] === 6) {
       scores[activePlayer] = 0;
       document.getElementById("score-" + activePlayer).textContent =
         scores[activePlayer];
       nextPlayer();
     } else {
-      prevRoll = dice;
       //Add score
-      roundScore += dice;
+      dice.forEach(die => {
+        roundScore += die;
+      });
       document.getElementById(
         "current-" + activePlayer
       ).textContent = roundScore;
